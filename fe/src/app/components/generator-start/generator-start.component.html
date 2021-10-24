@@ -1,0 +1,6 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <button type="submit" [disabled]="!profileForm.valid">Generate</button>
+</form>
+
+{{status}}
+
