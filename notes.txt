@@ -1,0 +1,2 @@
+Resources:
+https://www.bezkoder.com/angular-12-node-js-express-mysql/
