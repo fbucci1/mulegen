@@ -2,9 +2,11 @@ var ejs = require('ejs');
 var fs = require('fs');
 var path = require('path');
 var jp = require('jsonpath');
+var safeEval = require('safe-eval')
 
 function generateFiles(params){
   for(var i=0;i<params.executions.length;i++){
+    console.log('Generator execution['+i+']');
     var template=params.executions[i].template; 
     var jsonpath=params.executions[i].jsonpath; 
     //
@@ -13,6 +15,8 @@ function generateFiles(params){
     //
     var valuesIterator=jp.query(params.values, jsonpath);
     for(var ii=0;ii<valuesIterator.length;ii++){
+      console.log('Generator execution['+i+'].iterator['+ii+']');
+      console.log('Generator execution['+i+'].vars.length='+params.executions[i].vars.length);
       var iterator=valuesIterator[ii];
       var values={
        'params': params,
@@ -20,6 +24,16 @@ function generateFiles(params){
        'i': i,
        'ii': ii,
       }
+      var vars={};
+      for(var iii=0;iii<params.executions[i].vars.length;iii++){
+        var vName=params.executions[i].vars[iii].name; 
+        var vExpr=params.executions[i].vars[iii].expr;
+        console.log('Generator execution['+i+'].iterator['+ii+'].var['+iii+'], vName:'+vName+', vExpr:'+vExpr);
+        vars[vName] = safeEval(vExpr,values);
+        console.log('  -> val:'+vars[vName]);
+      }
+      console.log('  Vars: '+JSON.stringify(vars));
+      values['vars']= vars;
       generateFilesInDir(__templateDirName, __generatedDirName, values);
     }
   }
@@ -51,7 +65,7 @@ function generateFile(templateDirName, templateFileName, outputFolder, values){
   var srcFilename=path.join(templateDirName,templateFileName);
   var tgtFilename=path.join(outputFolder,templateFileName.substring(0,templateFileName.length-4));
   console.log("Applying template: "+srcFilename);
-  //console.log('  Values: '+JSON.stringify(values));
+  console.log('  Values: '+JSON.stringify(values));
   var template = fs.readFileSync(srcFilename, 'utf8');
   var renderized = ejs.render(template, values);
   //console.log(renderized);
@@ -69,10 +83,17 @@ var params = {
     {
       'template': 'template1/Int',
       'jsonpath': '$',
+      'vars': [
+        {'name': 'IntName', 'expr': 'iterator.IntName'}
+      ]
     },
     {
       'template': 'template1/IntFlow',
       'jsonpath': '$.IntFlows[*]',
+      'vars': [
+        {'name': 'IntName', 'expr': 'params.values.IntName'},
+        {'name': 'IntFlow', 'expr': 'iterator.FlowName'}
+      ]
     }
   ],
   'values': 
