@@ -16,7 +16,9 @@ function generateFiles(params){
       var iterator=valuesIterator[ii];
       var values={
        'params': params,
-       'iterator': iterator
+       'iterator': iterator,
+       'i': i,
+       'ii': ii,
       }
       generateFilesInDir(__templateDirName, __generatedDirName, values);
     }
@@ -49,7 +51,7 @@ function generateFile(templateDirName, templateFileName, outputFolder, values){
   var srcFilename=path.join(templateDirName,templateFileName);
   var tgtFilename=path.join(outputFolder,templateFileName.substring(0,templateFileName.length-4));
   console.log("Applying template: "+srcFilename);
-  console.log('  Values: '+JSON.stringify(values));
+  //console.log('  Values: '+JSON.stringify(values));
   var template = fs.readFileSync(srcFilename, 'utf8');
   var renderized = ejs.render(template, values);
   //console.log(renderized);
