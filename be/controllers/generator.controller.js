@@ -16,7 +16,7 @@ function generateFiles(params){
     var valuesIterator=jp.query(params.values, jsonpath);
     for(var ii=0;ii<valuesIterator.length;ii++){
       console.log('Generator execution['+i+'].iterator['+ii+']');
-      console.log('Generator execution['+i+'].vars.length='+params.executions[i].vars.length);
+      //console.log('Generator execution['+i+'].vars.length='+params.executions[i].vars.length);
       var iterator=valuesIterator[ii];
       var values={
        'params': params,
@@ -28,22 +28,33 @@ function generateFiles(params){
       for(var iii=0;iii<params.executions[i].vars.length;iii++){
         var vName=params.executions[i].vars[iii].name; 
         var vExpr=params.executions[i].vars[iii].expr;
-        console.log('Generator execution['+i+'].iterator['+ii+'].var['+iii+'], vName:'+vName+', vExpr:'+vExpr);
         vars[vName] = safeEval(vExpr,values);
-        console.log('  -> val:'+vars[vName]);
+        console.log('Generator execution['+i+'].iterator['+ii+'].var['+iii+'], vName:'+vName+', vExpr:'+vExpr+', val:'+vars[vName]);
       }
-      console.log('  Vars: '+JSON.stringify(vars));
+      //console.log('  Vars: '+JSON.stringify(vars));
       values['vars']= vars;
       generateFilesInDir(__templateDirName, __generatedDirName, values);
     }
   }
 }
 
+function replaceVarsInFileName(fileName, values){
+  for(var prop in values.vars){
+    if (fileName.includes('__'+prop+'__')){
+      //console.log('Replacing property ' + prop + ': ' + values.vars[prop]);
+      fileName=fileName.replace('__'+prop+'__',values.vars[prop]);
+    }else{
+      //console.log('Skipping property ' + prop + ' in ' + fileName);
+    }
+  }
+  return fileName;
+}
+
 function generateFilesInDir(__templateDirName, __generatedDirName, values){
   var files=fs.readdirSync(__templateDirName);
   for(var i=0;i<files.length;i++){
     var srcFilename=path.join(__templateDirName,files[i]);
-    var tgtFilename=path.join(__generatedDirName,files[i]);
+    var tgtFilename=path.join(__generatedDirName,replaceVarsInFileName(files[i], values));
     var stat = fs.lstatSync(srcFilename);
     if (stat.isFile()){
       if (files[i].endsWith('.ejs')){
@@ -63,9 +74,9 @@ function generateFilesInDir(__templateDirName, __generatedDirName, values){
 
 function generateFile(templateDirName, templateFileName, outputFolder, values){
   var srcFilename=path.join(templateDirName,templateFileName);
-  var tgtFilename=path.join(outputFolder,templateFileName.substring(0,templateFileName.length-4));
+  var tgtFilename=path.join(outputFolder,replaceVarsInFileName(templateFileName.substring(0,templateFileName.length-4), values));
   console.log("Applying template: "+srcFilename);
-  console.log('  Values: '+JSON.stringify(values));
+  //console.log('  Values: '+JSON.stringify(values));
   var template = fs.readFileSync(srcFilename, 'utf8');
   var renderized = ejs.render(template, values);
   //console.log(renderized);
@@ -75,7 +86,7 @@ function generateFile(templateDirName, templateFileName, outputFolder, values){
   }
   console.log("  Writing file     "+srcFilename+"->"+tgtFilename);
   fs.writeFileSync(tgtFilename, renderized, 'utf8');
-  console.log("  Written successfully...");
+  //console.log("  Written successfully...");
 }
 
 var params = {
@@ -92,7 +103,7 @@ var params = {
       'jsonpath': '$.IntFlows[*]',
       'vars': [
         {'name': 'IntName', 'expr': 'params.values.IntName'},
-        {'name': 'IntFlow', 'expr': 'iterator.FlowName'}
+        {'name': 'FlowName', 'expr': 'iterator.FlowName'}
       ]
     }
   ],
