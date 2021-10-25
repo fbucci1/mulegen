@@ -95,39 +95,7 @@ function generateFile(templateDirName, templateFileName, outputFolder, values){
   //console.log("    Written successfully...");
 }
 
-var params = {
-  'executions': [
-    {
-      'template': 'template1/Int',
-      'output': 'template1',
-      'jsonpath': '$',
-      'vars': [
-        {'name': 'IntName', 'expr': 'iterator.IntName'}
-      ]
-    },
-    {
-      'template': 'template1/IntFlow',
-      'output': 'template1',
-      'jsonpath': '$.IntFlows[*]',
-      'vars': [
-        {'name': 'IntName', 'expr': 'params.values.IntName'},
-        {'name': 'FlowName', 'expr': 'iterator.FlowName'}
-      ]
-    }
-  ],
-  'values': 
-    {
-      'IntName': 'TheApp1',
-      'IntFlows': [
-        {
-          'FlowName': 'Flow11',
-        },
-        {
-          'FlowName': 'Flow12',
-        },
-      ],
-    }
-  };
+var params = JSON.parse(fs.readFileSync('input/input1.json', 'utf8'));
 generateFiles(params);
 
 exports.generate = (req, res) => {
