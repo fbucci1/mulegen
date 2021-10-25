@@ -13,7 +13,11 @@ function generateFiles(params){
     //
     var valuesIterator=jp.query(params.values, jsonpath);
     for(var ii=0;ii<valuesIterator.length;ii++){
-      var values=valuesIterator[ii];
+      var iterator=valuesIterator[ii];
+      var values={
+       'params': params,
+       'iterator': iterator
+      }
       generateFilesInDir(__templateDirName, __generatedDirName, values);
     }
   }
