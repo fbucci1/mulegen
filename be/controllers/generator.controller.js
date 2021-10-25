@@ -9,9 +9,15 @@ function generateFiles(params){
     console.log('Generator execution['+i+']');
     var template=params.executions[i].template; 
     var jsonpath=params.executions[i].jsonpath; 
+    var output=params.executions[i].output; 
     //
     var __templateDirName='./templates/'+template;
-    var __generatedDirName='./generated/';
+    var __generatedDirName='./generated/'+output;
+    //
+    if (!fs.existsSync(__generatedDirName)){
+      console.log("  Creating folder     "+__generatedDirName);
+      fs.mkdirSync(__generatedDirName, { recursive: true });
+    }
     //
     var valuesIterator=jp.query(params.values, jsonpath);
     for(var ii=0;ii<valuesIterator.length;ii++){
@@ -93,6 +99,7 @@ var params = {
   'executions': [
     {
       'template': 'template1/Int',
+      'output': 'template1',
       'jsonpath': '$',
       'vars': [
         {'name': 'IntName', 'expr': 'iterator.IntName'}
@@ -100,6 +107,7 @@ var params = {
     },
     {
       'template': 'template1/IntFlow',
+      'output': 'template1',
       'jsonpath': '$.IntFlows[*]',
       'vars': [
         {'name': 'IntName', 'expr': 'params.values.IntName'},
