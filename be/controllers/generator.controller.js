@@ -66,9 +66,9 @@ function generateFilesInDir(__templateDirName, __generatedDirName, values){
       if (files[i].endsWith('.ejs')){
         generateFile(__templateDirName, files[i], __generatedDirName, values);        
       } else if (files[i]=='.gitignore'){
-        console.log('Skipping '+srcFilename);
+        console.log('  Skipping '+srcFilename);
       } else {
-        console.log('Copying '+srcFilename);
+        console.log('  Copying '+srcFilename+' to '+tgtFilename);
         fs.copyFileSync(srcFilename, tgtFilename);
       }
     }
@@ -81,18 +81,18 @@ function generateFilesInDir(__templateDirName, __generatedDirName, values){
 function generateFile(templateDirName, templateFileName, outputFolder, values){
   var srcFilename=path.join(templateDirName,templateFileName);
   var tgtFilename=path.join(outputFolder,replaceVarsInFileName(templateFileName.substring(0,templateFileName.length-4), values));
-  console.log("Applying template: "+srcFilename);
-  //console.log('  Values: '+JSON.stringify(values));
+  console.log("  Applying template: "+srcFilename);
+  //console.log('    Values: '+JSON.stringify(values));
   var template = fs.readFileSync(srcFilename, 'utf8');
   var renderized = ejs.render(template, values);
-  //console.log(renderized);
+  //console.log('    '+renderized);
   if (!fs.existsSync(outputFolder)){
-    console.log("  Creating folder     "+outputFolder);
+    console.log("    Creating folder     "+outputFolder);
     fs.mkdirSync(outputFolder, { recursive: true });
   }
-  console.log("  Writing file     "+srcFilename+"->"+tgtFilename);
+  console.log("    Writing file     "+srcFilename+"->"+tgtFilename);
   fs.writeFileSync(tgtFilename, renderized, 'utf8');
-  //console.log("  Written successfully...");
+  //console.log("    Written successfully...");
 }
 
 var params = {
