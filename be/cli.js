@@ -11,12 +11,12 @@ function generateFiles(params){
     var jsonpath=params.executions[i].jsonpath; 
     var output=params.executions[i].output; 
     //
-    var __templateDirName='../resources/templates/'+template;
-    var __generatedDirName='../resources/generated/'+output;
+    var templateDirName='../resources/templates/'+template;
+    var generatedDirName='../resources/generated/'+output;
     //
-    if (!fs.existsSync(__generatedDirName)){
-      console.log("  Creating folder     "+__generatedDirName);
-      fs.mkdirSync(__generatedDirName, { recursive: true });
+    if (!fs.existsSync(generatedDirName)){
+      console.log("  Creating folder     "+generatedDirName);
+      fs.mkdirSync(generatedDirName, { recursive: true });
     }
     //
     var valuesIterator=jp.query(params.values, jsonpath);
@@ -39,16 +39,16 @@ function generateFiles(params){
       }
       //console.log('  Vars: '+JSON.stringify(vars));
       values['vars']= vars;
-      generateFilesInDir(__templateDirName, __generatedDirName, values);
+      generateFilesInDir(templateDirName, generatedDirName, values);
     }
   }
 }
 
 function replaceVarsInFileName(fileName, values){
   for(var prop in values.vars){
-    if (fileName.includes('__'+prop+'__')){
+    if (fileName.includes('['+prop+']')){
       //console.log('Replacing property ' + prop + ': ' + values.vars[prop]);
-      fileName=fileName.replace('__'+prop+'__',values.vars[prop]);
+      fileName=fileName.replace('['+prop+']',values.vars[prop]);
     }else{
       //console.log('Skipping property ' + prop + ' in ' + fileName);
     }
@@ -56,15 +56,15 @@ function replaceVarsInFileName(fileName, values){
   return fileName;
 }
 
-function generateFilesInDir(__templateDirName, __generatedDirName, values){
-  var files=fs.readdirSync(__templateDirName);
+function generateFilesInDir(templateDirName, generatedDirName, values){
+  var files=fs.readdirSync(templateDirName);
   for(var i=0;i<files.length;i++){
-    var srcFilename=path.join(__templateDirName,files[i]);
-    var tgtFilename=path.join(__generatedDirName,replaceVarsInFileName(files[i], values));
+    var srcFilename=path.join(templateDirName,files[i]);
+    var tgtFilename=path.join(generatedDirName,replaceVarsInFileName(files[i], values));
     var stat = fs.lstatSync(srcFilename);
     if (stat.isFile()){
       if (files[i].endsWith('.ejs')){
-        generateFile(__templateDirName, files[i], __generatedDirName, values);        
+        generateFile(templateDirName, files[i], generatedDirName, values);        
       } else if (files[i]=='.gitignore'){
         console.log('  Skipping '+srcFilename);
       } else {
@@ -103,5 +103,5 @@ if (myArgs[0]==undefined){
 
 var inputFileName=myArgs[0];
 
-var params = JSON.parse(fs.readFileSync('../resources/input/'+inputFileName, 'utf8'));
+var params = JSON.parse(fs.readFileSync('../resources/input/'+inputFileName+'.json', 'utf8'));
 generateFiles(params);

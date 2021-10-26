@@ -6,7 +6,7 @@ To run the generator form the command line execute the following commands from g
 cd be
 npm install
 cd ..
-./run-cli.sh model1.json
+./run-cli.sh model1
 ```
 
 run-cli.sh requires an argument:
@@ -34,9 +34,9 @@ Here is an example:
 ```
 ### How does it work? 
 * CLI specifies the filename of the model.
-  * E.g. ./run-cli.sh model1.json
+  * E.g. ./run-cli.sh model1
 * The generator reads the model from the file.
-  * In the example, it is "model1.json", which resolves to "resources/input/model1.json". 
+  * In the example, it is "model1", which resolves to "resources/input/model1.json". 
 * The generator iterates over the array of executions. 
 
 For each execution the generator: 
