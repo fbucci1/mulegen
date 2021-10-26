@@ -5,7 +5,7 @@
       "output": "template1",
       "jsonpath": "$",
       "vars": [
-        {"name": "IntName", "expr": "iterator.IntName"}
+        {"name": "IntName", "expr": "element.IntName"}
       ]
     },
     {
@@ -14,7 +14,7 @@
       "jsonpath": "$.IntFlows[*]",
       "vars": [
         {"name": "IntName", "expr": "params.values.IntName"},
-        {"name": "FlowName", "expr": "iterator.FlowName"}
+        {"name": "FlowName", "expr": "element.FlowName"}
       ]
     }
   ],

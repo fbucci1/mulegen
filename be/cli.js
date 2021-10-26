@@ -21,12 +21,12 @@ function generateFiles(params){
     //
     var valuesIterator=jp.query(params.values, jsonpath);
     for(var ii=0;ii<valuesIterator.length;ii++){
-      console.log('Generator execution['+i+'].iterator['+ii+']');
+      console.log('Generator execution['+i+'].element['+ii+']');
       //console.log('Generator execution['+i+'].vars.length='+params.executions[i].vars.length);
-      var iterator=valuesIterator[ii];
+      var element=valuesIterator[ii];
       var values={
        'params': params,
-       'iterator': iterator,
+       'element': element,
        'i': i,
        'ii': ii,
       }
@@ -35,7 +35,7 @@ function generateFiles(params){
         var vName=params.executions[i].vars[iii].name; 
         var vExpr=params.executions[i].vars[iii].expr;
         vars[vName] = safeEval(vExpr,values);
-        console.log('Generator execution['+i+'].iterator['+ii+'].var['+iii+'], vName:'+vName+', vExpr:'+vExpr+', val:'+vars[vName]);
+        console.log('Generator execution['+i+'].element['+ii+'].var['+iii+'], vName:'+vName+', vExpr:'+vExpr+', val:'+vars[vName]);
       }
       //console.log('  Vars: '+JSON.stringify(vars));
       values['vars']= vars;
