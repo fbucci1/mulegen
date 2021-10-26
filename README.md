@@ -117,6 +117,16 @@ Here is a more complex example which combines more than one execution:
   }
 ```
 
+## Convert xlsx to json
+If the spreadsheet is structured as in the example, it can be easily converted in JSON by running the following form the command line execute the following commands from git bash:
+Notice the JSON only contains the 'values' of the model. 
+```
+cd be
+npm install
+cd ..
+./run-xls-to-model.sh ../resources/doc/samples/Sample
+```
+
 ## To run the backend (WIP)
 To run the generator form the command line execute the following commands from git bash:
 ```

@@ -81,13 +81,13 @@ var inputFileName=myArgs[0];
 var wb = new Excel.Workbook();
 var path = require('path');
 const { exit } = require('process');
-var filePath = path.resolve(__dirname, '../../mulegen-resources/'+inputFileName+'.xlsx');
+var filePath = path.resolve(__dirname, inputFileName+'.xlsx');
 
 wb.xlsx.readFile(filePath).then(function () {
   var sh = wb.getWorksheet('-');
   var i = 1;
   var model = readModel(sh, i, 0)
-  var filePath2 = path.resolve(__dirname, '../../mulegen-resources/'+inputFileName+'.json');
+  var filePath2 = path.resolve(__dirname, inputFileName+'.json');
   console.log('Saving model to '+filePath2);
   fs.writeFileSync(filePath2, JSON.stringify(model), 'utf8');
 });
