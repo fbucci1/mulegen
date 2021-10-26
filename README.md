@@ -35,10 +35,14 @@ Here is an example:
 ### How does it work? 
 * CLI specifies the filename of the model
 * The generator reads the model
-* The generator iterates over the array of executions. For each execution it: 
-  * Identifies the template to be used. For instance: "template1/Int". It is stored in the resources/templates folder. E.g. in this case the template would be in resources/templates/template1/Int 
-  * Computes the JSONPath expression on the model, which returns an array. For each element in the array (iterator):
-    * It creates a temporary object with the following structure: 
+* The generator iterates over the array of executions. 
+
+For each execution it: 
+* Identifies the template to be used. For instance: "template1/Int". It is stored in the resources/templates folder. E.g. in this case the template would be in resources/templates/template1/Int 
+* Computes the JSONPath expression on the model, which returns an array. 
+
+For each element in the array (iterator):
+* It creates a temporary object with the following structure: 
 ```
   {
     'params': theModelObject,
@@ -47,9 +51,9 @@ Here is an example:
     'ii': theNumberOfArrayElementInTheIteratorStartingFrom0
   }
 ```
-    * The temporary object is the context for the evaluation of each of the variables. E.g. variable IntName is computed evaluating  the expressioN: element.IntName, which resolves to "TheApp1".
-    * Now, variables can be used for computing file names and directory names. For instance: "Dir__IntName__" is resolved as "DirTheApp1". The same is applicable for fileNames. In general, all tokens "__var__" are replaced by the value of the variable "var".
-    * The temporary object is enriched with variables: 
+* The temporary object is the context for the evaluation of each of the variables. E.g. variable IntName is computed evaluating  the expressioN: element.IntName, which resolves to "TheApp1".
+* Now, variables can be used for computing file names and directory names. For instance: "Dir__IntName__" is resolved as "DirTheApp1". The same is applicable for fileNames. In general, all tokens "__var__" are replaced by the value of the variable "var".
+* The temporary object is enriched with variables: 
 ```
   {
     'params': theModelObject,
@@ -59,8 +63,8 @@ Here is an example:
     'vars': { 'varName': 'varValue', ....}
   }
 ```
-    * The temporary object is now the context for the evaluation of each of the EJS templates in the following steps. 
-    * The generator scans the files in the template. If the file does not end with .ejs it is considered a static file which is copied without transformation. In case it is ends with .ejs, ".ejs" sufix is removed and the content is computed as an EJS template. E.g. the content of the file "PREFIX <%=element.IntName%> SUFIX" is computes as "PREFIX TheApp1 SUFIX".
+* The temporary object is now the context for the evaluation of each of the EJS templates in the following steps. 
+* The generator scans the files in the template. If the file does not end with .ejs it is considered a static file which is copied without transformation. In case it is ends with .ejs, ".ejs" sufix is removed and the content is computed as an EJS template. E.g. the content of the file "PREFIX <%=element.IntName%> SUFIX" is computes as "PREFIX TheApp1 SUFIX".
 
 Here is a more complex example which combines more than one execution:
 ```
