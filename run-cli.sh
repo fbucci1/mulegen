@@ -1,2 +1,2 @@
 cd be
-node cli.js
+node cli.js $@

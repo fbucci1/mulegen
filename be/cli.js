@@ -95,5 +95,13 @@ function generateFile(templateDirName, templateFileName, outputFolder, values){
   //console.log("    Written successfully...");
 }
 
-var params = JSON.parse(fs.readFileSync('../resources/input/input1.json', 'utf8'));
+var myArgs = process.argv.slice(2);
+if (myArgs[0]==undefined){
+  console.log('Arg[0] is missing: Input json filename. E.g. ./run-cli.sh model1.json');
+  return;
+}
+
+var inputFileName=myArgs[0];
+
+var params = JSON.parse(fs.readFileSync('../resources/input/'+inputFileName, 'utf8'));
 generateFiles(params);

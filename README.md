@@ -16,6 +16,14 @@ cd ..
 ./run-be.sh
 ```
 
+## To run the generator form the command line
+```
+cd be
+npm install
+cd ..
+./run-cli.sh model1.json
+```
+
 ## To test the backend
 
 Open resources/MuleGen.postman_collection.json
